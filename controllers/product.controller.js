@@ -1,7 +1,6 @@
-// controllers/product.controller.js
 const Product = require("../models/product.model");
 
-// ✅ Custom error handler for consistent JSON responses
+// ✅ Centralized error handler
 const handleError = (res, message, status = 500, detail = null) => {
   console.error(message, detail || "");
   res.status(status).json({
@@ -11,8 +10,7 @@ const handleError = (res, message, status = 500, detail = null) => {
 };
 
 // -------------------------------------------------------------------
-// POST /api/products
-// CREATE
+// POST /api/products — CREATE
 // -------------------------------------------------------------------
 exports.create = async (req, res) => {
   const { name, description, price } = req.body;
@@ -35,10 +33,8 @@ exports.create = async (req, res) => {
       name,
       description,
       price: priceValue,
-      quantity,
     });
 
-    // ✅ Send JSON explicitly — prevents HTML fallback
     res.status(201).json(newProduct);
   } catch (err) {
     handleError(res, "Could not create product.", 500, err.message);
@@ -46,14 +42,11 @@ exports.create = async (req, res) => {
 };
 
 // -------------------------------------------------------------------
-// GET /api/products
-// READ all
+// GET /api/products — READ all
 // -------------------------------------------------------------------
 exports.findAll = async (req, res) => {
   try {
     const products = await Product.findAll();
-
-    // ✅ Always return JSON (even if empty)
     res.status(200).json(products || []);
   } catch (err) {
     handleError(res, "Could not retrieve products.", 500, err.message);
@@ -61,22 +54,17 @@ exports.findAll = async (req, res) => {
 };
 
 // -------------------------------------------------------------------
-// GET /api/products/:id
-// READ one
+// GET /api/products/:id — READ one
 // -------------------------------------------------------------------
 exports.findOne = async (req, res) => {
   const id = parseInt(req.params.id);
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid product ID." });
-  }
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid product ID." });
 
   try {
     const product = await Product.findById(id);
-
     if (!product) {
       return res.status(404).json({ error: `Product with id ${id} not found.` });
     }
-
     res.status(200).json(product);
   } catch (err) {
     handleError(res, `Error retrieving product with id ${id}.`, 500, err.message);
@@ -84,16 +72,13 @@ exports.findOne = async (req, res) => {
 };
 
 // -------------------------------------------------------------------
-// PUT /api/products/:id
-// UPDATE
+// PUT /api/products/:id — UPDATE
 // -------------------------------------------------------------------
 exports.update = async (req, res) => {
   const id = parseInt(req.params.id);
   const { name, description, price } = req.body;
 
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid product ID." });
-  }
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid product ID." });
 
   if (!name || !price) {
     return res.status(400).json({
@@ -109,46 +94,37 @@ exports.update = async (req, res) => {
   }
 
   try {
-    const success = await Product.update(id, {
-      name,
-      description,
-      price: priceValue,
-      quantity,
-    });
-
-    if (!success) {
+    const updated = await Product.update(id, { name, description, price: priceValue });
+    if (!updated) {
       return res.status(404).json({
         error: `Cannot update product with id ${id}. Maybe it was not found.`,
       });
     }
 
-    res.status(200).json({ message: "Product updated successfully." });
+    res.status(200).json({
+      message: "Product updated successfully.",
+      product: updated,
+    });
   } catch (err) {
     handleError(res, `Error updating product with id ${id}.`, 500, err.message);
   }
 };
 
 // -------------------------------------------------------------------
-// DELETE /api/products/:id
-// DELETE
+// DELETE /api/products/:id — DELETE
 // -------------------------------------------------------------------
 exports.delete = async (req, res) => {
   const id = parseInt(req.params.id);
-
-  if (isNaN(id)) {
-    return res.status(400).json({ error: "Invalid product ID." });
-  }
+  if (isNaN(id)) return res.status(400).json({ error: "Invalid product ID." });
 
   try {
     const success = await Product.delete(id);
-
     if (!success) {
       return res.status(404).json({
         error: `Cannot delete product with id ${id}. Maybe it was not found.`,
       });
     }
 
-    // ✅ Explicitly send no JSON body (prevents frontend JSON.parse errors)
     res.status(204).send();
   } catch (err) {
     handleError(res, `Could not delete product with id ${id}.`, 500, err.message);
