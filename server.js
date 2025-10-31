@@ -16,9 +16,6 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-// ✅ Explicitly handle preflight requests
-app.options("*", cors());
-
 // ✅ Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -45,4 +42,5 @@ app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`🌐 Access the API at http://localhost:${PORT}`);
 });
+
 
