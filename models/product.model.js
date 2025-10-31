@@ -40,9 +40,9 @@ class Product {
   static async update(id, { name, description, price }) {
     const sql =
       `
-      UPDATE beautyproducts
-      SET name = $1, description = $2, price = $3, quantity = $4
-      WHERE id = $5
+      UPDATE products
+      SET name = $1, description = $2, price = $3
+      WHERE id = $4
       RETURNING id
       `;
     const result = await pool.query(sql, [name, description, price || 0, id]);
@@ -58,4 +58,5 @@ class Product {
 
 
 module.exports = Product;
+
 
