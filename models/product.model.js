@@ -14,7 +14,7 @@ class Product {
   static async create({ name, description, price }) {
     const sql =
       `INSERT INTO products (name, description, price) VALUES ($1, $2, $3)
-       RETURNING id, name, description, price, quantity, created_at
+       RETURNING id, name, description, price, created_at
        `;
     const result = await pool.query(sql, [name, description, price || 0]);
     return result.rows[0];
@@ -32,7 +32,7 @@ class Product {
 
   static async findById(id) {
     const sql =
-      "SELECT id, name, description, price, created_at FROM products WHERE id = ?";
+      "SELECT id, name, description, price, created_at FROM products WHERE id = $1";
     const rows = await executeQuery(sql, [id]);
     return rows[0] || null;
   }
@@ -58,5 +58,6 @@ class Product {
 
 
 module.exports = Product;
+
 
 
