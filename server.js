@@ -15,7 +15,7 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
-aapp.use(express.json());
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
@@ -38,3 +38,4 @@ app.listen(PORT, () => {
   console.log(`Access the API at http://localhost:${PORT}`);
 
 });
+
