@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors({
   origin: [
     "http://localhost:5173", // local dev frontend
-    "https://bong-frontend.vercel.app/", // your deployed frontend
+    "https://bong-frontend.vercel.app", // your deployed frontend
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -39,6 +39,7 @@ app.listen(PORT, () => {
   console.log(`Access the API at http://localhost:${PORT}`);
 
 });
+
 
 
 
