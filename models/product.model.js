@@ -12,8 +12,8 @@ const executeQuery = async (sql, params = []) => {
 
 class Product {
   static async create({ name, description, price }) {
-    const sql =
-      `INSERT INTO products (name, description, price) VALUES ($1, $2, $3)
+    const sql =`
+       INSERT INTO products (name, description, price) VALUES ($1, $2, $3)
        RETURNING id, name, description, price, created_at
        `;
     const result = await pool.query(sql, [name, description, price || 0]);
@@ -21,8 +21,7 @@ class Product {
   }
 
   static async findAll() {
-    const sql =
-      `
+    const sql =`
       SELECT id, name, description, price, created_at
       FROM products
       ORDER BY id DESC
@@ -31,15 +30,17 @@ class Product {
   }
 
   static async findById(id) {
-    const sql =
-      "SELECT id, name, description, price, created_at FROM products WHERE id = $1";
+    const sql =`
+    SELECT id, name, description, price, created_at 
+    FROM products 
+    WHERE id = $1
+    `;
     const rows = await executeQuery(sql, [id]);
     return rows[0] || null;
   }
 
   static async update(id, { name, description, price }) {
-    const sql =
-      `
+    const sql =`
       UPDATE products
       SET name = $1, description = $2, price = $3
       WHERE id = $4
@@ -58,6 +59,7 @@ class Product {
 
 
 module.exports = Product;
+
 
 
 
