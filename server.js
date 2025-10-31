@@ -13,6 +13,7 @@ app.use(cors({
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
 }));
 
 app.use(express.json());
@@ -38,5 +39,6 @@ app.listen(PORT, () => {
   console.log(`Access the API at http://localhost:${PORT}`);
 
 });
+
 
 
